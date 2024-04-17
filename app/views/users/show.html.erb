@@ -12,10 +12,11 @@
               <%= flash[:notice] %>
             </div>
           <% end %>
-          
+
           <% if flash[:alert] %>
             <div class="alert alert-danger" role="alert">
               <%= flash[:alert] %>
+              
             </div>
           <% end %>
           <p><strong>Email:</strong> <%= @user.email %></p>
