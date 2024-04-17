@@ -4,6 +4,7 @@
 ARG RUBY_VERSION=3.2.2
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
+
 # Rails app lives here
 WORKDIR /rails
 
