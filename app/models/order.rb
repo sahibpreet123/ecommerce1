@@ -9,6 +9,7 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_items
 
   before_save :calculate_total
+  
 
   def calculate_total
     # Ensure there are no nil values for quantity and price
