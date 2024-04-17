@@ -3,7 +3,7 @@ class Admin::OrdersController < ApplicationController
   before_action :set_order, only: [:edit, :update, :destroy]
 
   def index
-    @orders = Order.includes(:customer, :order_items).order(created_at: :desc)
+    @orders =  Order.includes(:customer, :order_items).order(created_at: :desc)
   end
 
   def edit
