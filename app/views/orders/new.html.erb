@@ -1,0 +1,153 @@
+<%= render 'layouts/clientNav' %>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Invoice Details</h2>
+  <% if flash[:success] %>
+    <div class="alert alert-success" role="alert">
+      <%= flash[:success] %>
+    </div>
+  <% end %>
+  <%= form_for @order, html: { id: 'payment-form', class: 'needs-validation', novalidate: "" } do |f| %>
+    <div class="row">
+      <%= f.hidden_field :gst, id: 'hidden_gst' %>
+      <%= f.hidden_field :pst, id: 'hidden_pst' %>
+      <%= f.hidden_field :hst, id: 'hidden_hst' %>
+
+      <div class="col-lg-6 mb-4">
+        <div class="card border-5">
+          <div class="card-body">
+            <h4 class="card-title">Shipping Details</h4>
+            <div class="form-group">
+              <%= f.label :address, 'Shipping Address', class: 'form-label' %>
+              <%= f.text_field :address, class: 'form-control', placeholder: '1234 Main St', required: true %>
+            </div>
+            <div class="form-group">
+            <%= f.label :province_id, 'Province', class: 'form-label' %>
+            <%= f.collection_select :province_id, @provinces, :last, :first, { prompt: 'Select Province' }, { id: 'province_select', class: 'form-control', required: true } %>
+          </div>
+          
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mb-4">
+        <div class="card border-5">
+          <div class="card-body">
+            <h4 class="card-title">Invoice Details</h4>
+            <% total_price = 0 %>
+            <%= f.fields_for :order_items do |item_fields| %>
+              <div class="mb-3">
+                <p class="form-label"><%= item_fields.object.product.name %>: <%= item_fields.object.quantity %> x <%= number_to_currency(item_fields.object.price) %></p>
+                <% total_price += item_fields.object.quantity * item_fields.object.price %>
+              </div>
+            <% end %>
+            <div>
+              <p id="gst">GST: <%= number_to_currency(@order.gst || 0) %></p>
+              <p id="pst">PST: <%= number_to_currency(@order.pst || 0) %></p>
+              <p id="hst">HST: <%= number_to_currency(@order.hst || 0) %></p>
+            </div>
+            <div class="text-right mt-2">
+              <h5>Total Order Price: <%= number_to_currency(total_price + (@order.gst || 0) + (@order.pst || 0) + (@order.hst || 0)) %></h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-12 mt-4">
+        <div class="card border-5">
+          <div class="card-body">
+            <h4 class="card-title">Payment Details</h4>
+            <div id="card-element"></div>
+            <div id="card-errors" role="alert"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-right mt-4">
+      <%= f.submit "Place Order", class: 'btn-custom-primary' %>
+    </div>
+  <% end %>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const provinceSelect = document.getElementById('province_select');
+
+  provinceSelect.addEventListener('change', function() {
+    const provinceId = this.value; 
+    fetch(`/provinces/${provinceId}/tax_rates`)
+      .then(response => response.json())
+      .then(taxRates => {
+        document.getElementById('gst').textContent = `GST: ${taxRates.gst}%`;
+        document.getElementById('pst').textContent = `PST: ${taxRates.pst}%`;
+        document.getElementById('hst').textContent = `HST: ${taxRates.hst}%`;
+
+        document.getElementById('hidden_gst').value = taxRates.gst;
+        document.getElementById('hidden_pst').value = taxRates.pst;
+        document.getElementById('hidden_hst').value = taxRates.hst;
+      })
+      .catch(error => console.error('Error fetching tax rates:', error));
+  });
+
+  if (provinceSelect.value) {
+    provinceSelect.dispatchEvent(new Event('change'));
+  }
+});
+</script>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const stripe = Stripe('pk_test_51P66VjSBINuBNg5tRulpGci113qdQRkOisw8aDnZI7CAa66Yw0QKKxqp9SU46ZLYYFSh5u2avLps9QHJQhJTV7Dh00BeNAEodP');
+  const elements = stripe.elements();
+  const card = elements.create('card', {
+    style: {
+      base: {
+        color: '#32325d',
+        lineHeight: '18px',
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4'
+        }
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a'
+      }
+    }
+  });
+  card.mount('#card-element');
+
+  card.addEventListener('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  });
+
+  var form = document.getElementById('payment-form');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+      } else {
+        // Add token to form
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', result.token.id);
+        form.appendChild(hiddenInput);
+        form.submit();
+      }
+    });
+  });
+});
+</script>

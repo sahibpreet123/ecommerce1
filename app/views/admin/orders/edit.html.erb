@@ -1,0 +1,43 @@
+<%= render 'layouts/adminNav' %>
+<div class="container mt-3">
+  <h2>Edit Order <%= @order.id %></h2>
+
+  <%= form_with(model: [:admin, @order], local: true) do |form| %>
+    <div class="mb-3">
+      <%= form.label :subtotal, class: 'form-label' %>
+      <%= form.number_field :subtotal, class: 'form-control', step: '0.01' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :gst, class: 'form-label' %>
+      <%= form.number_field :gst, class: 'form-control', step: '0.01' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :pst, class: 'form-label' %>
+      <%= form.number_field :pst, class: 'form-control', step: '0.01' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :hst, class: 'form-label' %>
+      <%= form.number_field :hst, class: 'form-control', step: '0.01' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :total, class: 'form-label' %>
+      <%= form.number_field :total, class: 'form-control', step: '0.01' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :address, class: 'form-label' %>
+      <%= form.text_area :address, class: 'form-control' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :province_id, 'Province', class: 'form-label' %>
+      <%= form.collection_select :province_id, Province.all, :id, :name, {}, {class: 'form-select'} %>
+    </div>
+
+    <%= form.submit 'Update Order', class: 'btn btn-primary' %>
+  <% end %>
+</div>

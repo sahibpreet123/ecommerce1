@@ -1,0 +1,51 @@
+<%= render 'layouts/clientNav' %>
+<%= render 'layouts/hero' %>
+<div class="container mt-5">
+<%= form_with url: home_index_path, method: :get, local: true, class: 'form-inline justify-content-center' do |form| %>
+  <div class="form-row align-items-center">
+    <div class="col-auto">
+      <%= form.text_field :search, placeholder: "Search for products", value: params[:search], class: 'form-control mb-2' %>
+    </div>
+    <div class="col-auto">
+      <%= form.collection_select :category_id, Category.all, :id, :name, { include_blank: "All Categories" }, { class: 'form-control mb-2' } %>
+    </div>
+    <div class="col-auto">
+      <%= form.submit 'Search', class: 'btn-custom-primary' %>
+    </div>
+  </div>
+<% end %>
+<h2 class="text-center mb-4">Explore Products</h2>
+<div class="row text-center mb-4">
+  <div class="col-md-4 mb-3">
+    <%= link_to categories_path, class: 'btn btn-lg btn-info btn-block' do %>
+      <i class="fa fa-tags"></i> Categories
+    <% end %>
+  </div>
+  <div class="col-md-4 mb-3">
+    <%= link_to on_sale_path, class: 'btn btn-lg btn-info btn-block' do %>
+      <i class="fa fa-percent"></i> On Sale
+    <% end %>
+  </div>
+  <div class="col-md-4 mb-3">
+    <%= link_to root_path(new_products: true), class: 'btn btn-lg btn-info btn-block' do %>
+      <i class="fa fa-newspaper-o"></i> New Products
+    <% end %>
+  </div>
+   
+  </div>
+
+
+  <% if @products.empty? %>
+    <div class="alert alert-info text-center">
+      <strong>No products found.</strong>
+    </div>
+  <% else %>
+    <div class="row">
+  
+  <%= render partial: 'layouts/product_card', collection: @products, as: :product %>
+ 
+    </div>
+  <% end %>
+  
+  <%= paginate @products %>
+</div>

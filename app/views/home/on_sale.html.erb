@@ -1,0 +1,10 @@
+<%= render 'layouts/clientNav' %>
+
+<div class="container mt-5">
+  <h1>Products On Sale</h1>
+  <div class="row">
+
+      <%= render partial: 'layouts/product_card', collection: @products_on_sale, as: :product %>
+
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom" >
+<%= link_to root_path, class: 'navbar-brand' do %>
+  <%= image_tag('soapPED.png', alt: 'Sopped Logo', class:"logo") %>
+<% end %>
+
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+      <% if user_signed_in? %>
+        <li class="nav-item">
+          <%= link_to 'Cart', cart_path, class: 'nav-link' %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Orders', orders_path, class: 'nav-link' %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Profile", profile_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, form_class: "d-inline", class: "btn btn-link nav-link" %>
+        </li>
+      <% else %>
+        <li class="nav-item">
+          <%= link_to 'Login', new_user_session_path, class: 'nav-link' %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</nav>
+
+<div class="breadcrumbs-container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <% generate_breadcrumbs.each do |breadcrumb| %>
+        <% if request.path == breadcrumb[:path] %>
+          <li class="breadcrumb-item active" aria-current="page"><%= breadcrumb[:title] %></li>
+        <% else %>
+          <li class="breadcrumb-item"><%= link_to breadcrumb[:title], breadcrumb[:path] %></li>
+        <% end %>
+      <% end %>
+    </ol>
+  </nav>
+</div>

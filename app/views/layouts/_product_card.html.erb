@@ -1,0 +1,17 @@
+<div class="col-md-4 mb-4">
+  <div class="card h-100 shadow-sm">
+    <% if product.image.attached? %>
+      <%= image_tag(product.image, class: 'card-img-top') %>
+    <% else %>
+      <img src="https://via.placeholder.com/300x300" alt="No image available" class="card-img-top">
+    <% end %>
+    <div class="card-body d-flex flex-column">
+      <h5 class="card-title"><%= product.name %></h5>
+      <p class="card-text"><%= truncate(product.description, length: 100) %></p>
+      <div class="mt-auto">
+        <h6 class="card-subtitle mb-2 text-muted">Price: <%= number_to_currency(product.price) %></h6>
+        <%= link_to 'View', product_path(product), class: 'btn-custom-primary' %>
+      </div>
+    </div>
+  </div>
+</div>

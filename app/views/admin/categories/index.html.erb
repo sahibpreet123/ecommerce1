@@ -1,0 +1,30 @@
+<%= render 'layouts/adminNav' %>
+
+<div class="container mt-4">
+  <h1>Categories</h1>
+  <%= link_to 'New Category', new_admin_category_path, class: 'btn btn-success mb-3' %>
+
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="thead-dark"> <!-- Changed from thead-light to thead-dark for consistency -->
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th colspan="2" scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @categories.each do |category| %>
+          <tr>
+            <td><%= category.name %></td>
+            <td><%= category.description %></td>
+            <td><%= link_to 'Edit', edit_admin_category_path(category), class: 'btn btn-outline-primary btn-sm' %> <!-- Adjust button classes as needed --></td>
+            <td>
+              <%= button_to 'Destroy', [:admin, category], method: :delete, form: { class: 'd-inline' }, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger btn-sm' %> <!-- Adjust button classes as needed -->
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

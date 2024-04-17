@@ -1,0 +1,43 @@
+<%= render 'layouts/adminNav' %>
+
+<div class="container" style="max-width: 1200px;">
+  <h1 class="mb-5">Product List</h1>
+  <%= link_to 'New Product', new_admin_product_path, class: 'btn btn-success mb-4' %>
+
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Image</th>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Price</th>
+          <th scope="col">Ingredients</th>
+          <th scope="col">On Sale</th>
+          <th colspan="3" scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @products.each do |product| %>
+          <tr>
+            <td>
+              <% if product.image.attached? %>
+                <%= image_tag(product.image, height: '100px', style: 'object-fit:cover;') %>
+              <% else %>
+                <img src="https://via.placeholder.com/150" alt="Placeholder image" height="100px">
+              <% end %>
+            </td>
+            <td><%= product.name %></td>
+            <td><%= product.description %></td>
+            <td><%= number_to_currency(product.price) %></td>
+            <td><%= product.ingredients %></td>
+            <td><%= product.on_sale %></td>
+            <td><%= link_to 'Show', [:admin, product], class: 'btn btn-outline-primary btn-sm' %></td>
+            <td><%= link_to 'Edit', edit_admin_product_path(product), class: 'btn btn-outline-secondary btn-sm' %></td>
+            <td><%= button_to 'Delete', [:admin, product], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger btn-sm' %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

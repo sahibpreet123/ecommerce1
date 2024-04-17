@@ -1,0 +1,31 @@
+<%= render 'layouts/adminNav' %>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Provinces and Tax Rates</h1>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">GST (%)</th>
+          <th scope="col">PST (%)</th>
+          <th scope="col">HST (%)</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @provinces.each do |province| %>
+          <tr>
+            <td><%= province.name %></td>
+            <td><%= number_to_percentage(province.gst, precision: 2) %></td>
+            <td><%= number_to_percentage(province.pst, precision: 2) %></td>
+            <td><%= number_to_percentage(province.hst, precision: 2) %></td>
+            <td>
+              <%= link_to 'Edit', edit_admin_province_path(province), class: 'btn btn-sm btn-primary' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
