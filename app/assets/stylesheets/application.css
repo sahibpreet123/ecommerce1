@@ -16,6 +16,7 @@
   transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
 }
 
+
 .btn-custom-primary:hover, .btn-custom-primary:focus {
   background-color: #1a1a1a; /* Slightly lighter gray */
   color: white;
